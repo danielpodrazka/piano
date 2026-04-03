@@ -1,10 +1,9 @@
 # Audio Sample Attribution
 
-## Piano Samples (`audio/piano/`)
+## Salamander Grand Piano (`audio/piano/` and `audio/salamander/`)
 
 **Source:** Salamander Grand Piano V3 by Alexander Holm
 - Instrument: Yamaha C5 Grand Piano, recorded with two AKG C414 microphones in AB position
-- Distributed via Tone.js CDN: https://tonejs.github.io/audio/salamander/
 - Original project: https://sfzinstruments.github.io/pianos/salamander/
 - Archive: https://archive.org/details/SalamanderGrandPianoV3
 - GitHub: https://github.com/sfzinstruments/SalamanderGrandPiano
@@ -14,7 +13,14 @@
 - You must give appropriate credit to Alexander Holm
 - https://creativecommons.org/licenses/by/3.0/
 
-**Processing:** 17 samples selected (every ~3 semitones from C2 to C6), served as MP3 from the Tone.js CDN. Intermediate notes are pitch-shifted at runtime via the Web Audio API.
+**`audio/piano/`** — 17 samples (A1, C2–C6 at roughly every 3 semitones), MP3, sourced from the
+Tone.js CDN. These are used exclusively as the **soundboard impulse response reference** in
+`generators/extract_soundboard_ir.py`: per-note transfer functions are extracted from these
+recordings via spectral division, then convolved into the physics synthesis to give the grand
+piano its body resonance.
+
+**`audio/salamander/`** — Full set of 19 samples with 8 velocity layers (pp–fff), used as the
+in-browser **reference instrument** for A/B comparison against the physics-based synthesis.
 
 ---
 
