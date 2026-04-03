@@ -1,0 +1,44 @@
+MIT License
+
+Copyright (c) 2025–2026 Daniel Podrazka
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+---
+
+THIRD-PARTY AUDIO LICENSES
+===========================
+
+audio/piano/ and audio/salamander/
+  Salamander Grand Piano V3 by Alexander Holm
+  License: Creative Commons Attribution 3.0 (CC BY 3.0)
+  https://creativecommons.org/licenses/by/3.0/
+  Source: https://sfzinstruments.github.io/pianos/salamander/
+
+audio/rhodes/
+  jRhodes3d by Jeff Learman
+  License: Creative Commons Attribution-NonCommercial 4.0 (CC BY-NC 4.0)
+  https://creativecommons.org/licenses/by-nc/4.0/
+  Source: https://github.com/sfzinstruments/jlearman.jRhodes3d
+  Note: The CC BY-NC 4.0 license applies to these sample files only.
+        Music created using these samples carries no restrictions (CC0).
+        For commercial use of the samples themselves, contact jjlearman@gmail.com.
+
+audio/grand-piano/, audio/rhodes-fm/, audio/prism/, audio/ddsp-piano/
+  Generated audio — MIT License (same as the code above)
