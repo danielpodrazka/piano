@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Physics-Based Piano Synthesis</title>
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
 <style>
 * { margin: 0; padding: 0; box-sizing: border-box; }
 body {
@@ -442,7 +443,7 @@ body.mirror #press-dot-canvas { transform: scaleX(-1); }
   <div class="inst-toggle">
     <button class="inst-btn active" data-inst="grand_piano">Grand Piano</button>
     <button class="inst-btn" data-inst="salamander">Salamander (ref)</button>
-    <button class="inst-btn" data-inst="rhodes_fm">Rhodes FM</button>
+    <button class="inst-btn" data-inst="rhodes_fm">Rhodes</button>
     <button class="inst-btn" data-inst="rhodes">Rhodes (ref)</button>
     <button class="inst-btn" data-inst="prism">Prism</button>
     <button class="inst-btn" data-inst="ddsp_piano">DDSP Piano</button>
@@ -1102,6 +1103,40 @@ function getAudioCtx() {
 }
 
 const INSTRUMENTS = {
+  grand_piano: {
+    dir: 'audio/grand-piano/',
+    velocityLayers: 8,
+    samples: [
+      { midi: 35, file: 'B1' },  { midi: 36, file: 'C2' },
+      { midi: 37, file: 'Cs2' }, { midi: 38, file: 'D2' },
+      { midi: 39, file: 'Ds2' }, { midi: 40, file: 'E2' },
+      { midi: 41, file: 'F2' },  { midi: 42, file: 'Fs2' },
+      { midi: 43, file: 'G2' },  { midi: 44, file: 'Gs2' },
+      { midi: 45, file: 'A2' },  { midi: 46, file: 'As2' },
+      { midi: 47, file: 'B2' },  { midi: 48, file: 'C3' },
+      { midi: 49, file: 'Cs3' }, { midi: 50, file: 'D3' },
+      { midi: 51, file: 'Ds3' }, { midi: 52, file: 'E3' },
+      { midi: 53, file: 'F3' },  { midi: 54, file: 'Fs3' },
+      { midi: 55, file: 'G3' },  { midi: 56, file: 'Gs3' },
+      { midi: 57, file: 'A3' },  { midi: 58, file: 'As3' },
+      { midi: 59, file: 'B3' },  { midi: 60, file: 'C4' },
+      { midi: 61, file: 'Cs4' }, { midi: 62, file: 'D4' },
+      { midi: 63, file: 'Ds4' }, { midi: 64, file: 'E4' },
+      { midi: 65, file: 'F4' },  { midi: 66, file: 'Fs4' },
+      { midi: 67, file: 'G4' },  { midi: 68, file: 'Gs4' },
+      { midi: 69, file: 'A4' },  { midi: 70, file: 'As4' },
+      { midi: 71, file: 'B4' },  { midi: 72, file: 'C5' },
+      { midi: 73, file: 'Cs5' }, { midi: 74, file: 'D5' },
+      { midi: 75, file: 'Ds5' }, { midi: 76, file: 'E5' },
+      { midi: 77, file: 'F5' },  { midi: 78, file: 'Fs5' },
+      { midi: 79, file: 'G5' },  { midi: 80, file: 'Gs5' },
+      { midi: 81, file: 'A5' },  { midi: 82, file: 'As5' },
+      { midi: 83, file: 'B5' },  { midi: 84, file: 'C6' },
+      { midi: 85, file: 'Cs6' }, { midi: 86, file: 'D6' },
+    ],
+    buffers: {},
+    loaded: false,
+  },
   rhodes: {
     dir: 'audio/rhodes/',
     samples: [
@@ -1253,7 +1288,7 @@ async function loadBatch(tasks, concurrency = 8) {
 
 async function loadInstrument(name) {
   const inst = INSTRUMENTS[name];
-  if (inst.loaded) return;
+  if (!inst || inst.loaded) return;
   const ctx = getAudioCtx();
   const nLayers = inst.velocityLayers || 0;
   const cacheBreak = Date.now();
@@ -1457,6 +1492,7 @@ function playMidiNote(midi, duration = 2.5, velocity = 100) {
   }
 
   const inst = INSTRUMENTS[state.instrument];
+  if (!inst) return;
 
   // Visualize velocity
   drawVelBar(velocity);
@@ -5444,7 +5480,6 @@ const HEKeyboard = {
           const uniqueSamples = st.trajectory.filter((s, i) => i === st.trajectory.length - 1 || s[1] !== st.trajectory[i + 1][1]).length;
           if (velocity < 30) console.log('pp strike ' + JSON.stringify({ midi, velocity, speed: Math.round(speed), durationMs: Math.round((now - t0) * 1000), samples: st.trajectory.length, uniqueSamples, trajectory: st.trajectory.map(([t, v]) => [Math.round((t - t0) * 1000), v]) }));
 
-          if (!fullPianoMode) setFullPianoMode(true);
           keysHeld[code] = true;
           // Find mode: C4 continues to next trial after answer
           if (findWaitingToContinue && midi === 60) {
@@ -5634,7 +5669,6 @@ const MidiInput = (() => {
   function noteOn(midi, velocity) {
     if (!samplesReady) return;
     flashNote(midi);
-    if (!fullPianoMode) setFullPianoMode(true);
     if (MidiFollow.active) {
       MidiFollow.onNoteOn(midi, velocity);
       drawPiano();

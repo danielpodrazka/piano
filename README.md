@@ -1,5 +1,13 @@
 # Physics-Based Piano Synthesis
 
+## Demos
+
+**Grand Piano + MIDI player** — [`media/midi_demo.mp4`](media/midi_demo.mp4)
+
+**Hall Effect keyboard velocity** — [`media/he_demo.mp4`](media/he_demo.mp4)
+
+---
+
 A browser-based synthesizer that generates piano and keyboard sounds from physical models and signal processing — no neural networks, no sample manipulation, just physics equations and math.
 
 **Requires a local server** (browsers block audio file loading from `file://`):
@@ -70,6 +78,45 @@ Features:
 - **Ear training modules** — intervals, chords, scales, progressions, rhythm, dictation
 - **MIDI player** — load `.mid` files or use the included warmup exercises
 - **MIDI input** — connect a MIDI keyboard and play live
+- **Hall Effect keyboard** — WebHID velocity engine for HE keyboards (Keychron K2 HE); continuous travel depth → piano-style velocity and release dynamics
+
+---
+
+## Hall Effect Keyboard Velocity Engine
+
+`piano.html` includes a velocity engine for Hall Effect keyboards (tested on Keychron K2 HE) connected over WebHID. Unlike mechanical switches, HE sensors report continuous key travel depth at ~918 Hz, which the engine converts into piano-style velocity and release dynamics.
+
+### How it works
+
+The firmware streams a custom HID report (`0xa9 0x31`) containing the matrix position and travel depth (0–255 raw units, ~3.5 mm full travel) for every active key at each scan cycle.
+
+On the browser side, each keypress goes through a three-state machine:
+
+1. **idle → descending** — key exceeds the noise floor (~1.5% travel); trajectory recording begins
+2. **descending → pressed** (note on) — key crosses the strike point (~3.5mm). Velocity is computed from the instantaneous speed at the strike moment using a quadratic fit over the recorded trajectory samples
+3. **pressed → idle** (note off) — key returns below the noise floor. Release speed determines the decay time (fast staccato → short fade, slow legato → long fade)
+
+### Velocity mapping
+
+Speed is measured in raw travel units per second and mapped to MIDI velocity 1–127 on a log scale with a mild power curve (exponent 1.3), calibrated against five anchor points:
+
+| Key press | Speed (raw/s) | MIDI velocity |
+|-----------|---------------|---------------|
+| Feather   | ~30           | ~1            |
+| Gentle    | ~300          | ~28           |
+| Soft      | ~1000         | ~48           |
+| Medium    | ~5000         | ~78           |
+| Hard      | ~20000        | ~107          |
+| Smash     | ~50000        | 127           |
+
+### Firmware
+
+The streaming HID report is added in a fork of QMK: [`danielpodrazka/qmk_firmware`](https://github.com/danielpodrazka/qmk_firmware), branch `stream-travel`. It adds the `AMC_STREAM_TRAVEL` command (`0xa9 0x31`) that bulk-streams key travel data at the full scan rate (~918 Hz on STM32F401).
+
+To enable WebHID streaming from the browser, the page sends a feature report enabling the stream:
+```js
+device.sendFeatureReport(0x00, new Uint8Array([0x00, 0xa9, 0x31, 0x01, ...]));
+```
 
 ---
 
