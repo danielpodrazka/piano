@@ -667,8 +667,8 @@ const WHITE_WIDTH = 22;
 const BLACK_WIDTH = 14;
 const WHITE_HEIGHT = 120;
 const BLACK_HEIGHT = 75;
-const PIANO_START_MIDI = 21;  // A0 (full 88-key piano)
-const PIANO_END_MIDI = 108;  // C8 (full 88-key piano)
+const PIANO_START_MIDI = 36;  // C2 — default compact view matching keyboard map
+const PIANO_END_MIDI = 84;   // C6 — 29 white keys, fits 640px canvas at 22px each
 
 /* ═══════════════════════════════════════════════════════
    NOTE DATA
@@ -1311,9 +1311,14 @@ async function loadInstrument(name) {
 async function loadSamples() {
   if (samplesLoading) return;
   samplesLoading = true;
-  await Promise.all([loadInstrument('grand_piano'), loadInstrument('salamander'), loadInstrument('rhodes'), loadInstrument('rhodes_fm'), loadInstrument('prism'), loadInstrument('ddsp_piano')]);
-  samplesLoading = false;
+  // Load the active instrument first so keyboard and MIDI work immediately
+  await loadInstrument(state.instrument);
   samplesReady = true;
+  // Load remaining instruments in background
+  const rest = ['grand_piano', 'salamander', 'rhodes', 'rhodes_fm', 'prism', 'ddsp_piano']
+    .filter(n => n !== state.instrument);
+  await Promise.all(rest.map(n => loadInstrument(n)));
+  samplesLoading = false;
 }
 
 function findClosestSample(midi, samples) {
@@ -3676,6 +3681,10 @@ document.querySelectorAll('.inst-btn').forEach(btn => {
     const thereminOn = state.instrument === 'theremin';
     document.getElementById('theremin-controls').style.display = thereminOn ? 'flex' : 'none';
     if (thereminOn && !fullPianoMode) setFullPianoMode(true);
+    // If this instrument hasn't loaded yet, kick off its load now
+    if (INSTRUMENTS[state.instrument] && !INSTRUMENTS[state.instrument].loaded) {
+      loadInstrument(state.instrument);
+    }
     saveState();
   });
 });
@@ -3834,7 +3843,7 @@ function setFullPianoMode(on) {
 document.addEventListener('keydown', (e) => {
   // HE keyboard handles input via WebHID — suppress OS key events
   if (HEKeyboard.device) { e.preventDefault(); return; }
-  if (!samplesReady) return;
+  if (!INSTRUMENTS[state.instrument]?.loaded) return;
   // Full Piano Mode: every key → piano note
   if (fullPianoMode) {
     e.preventDefault();
@@ -4066,7 +4075,7 @@ staffCanvas.addEventListener('mouseleave', () => {
 
 // Piano canvas click (Find + Play modes)
 pianoCanvas.addEventListener('click', (e) => {
-  if (!samplesReady) return;
+  if (!INSTRUMENTS[state.instrument]?.loaded) return;
   const rect = pianoCanvas.getBoundingClientRect();
   const x = e.clientX - rect.left;
   const y = e.clientY - rect.top;
