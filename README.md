@@ -6,7 +6,7 @@ A browser-based synthesizer that generates piano and keyboard sounds from physic
 
 ```bash
 npm run piano
-# then open http://localhost:8000/piano.html
+# then open http://127.0.0.1:8000/piano.html
 ```
 
 Or without npm: `python3 -m http.server 8000` and open the same URL.
