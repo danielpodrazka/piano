@@ -1,5 +1,7 @@
 # Physics-Based Piano Synthesis
 
+**Live demo:** https://piano.daniep.com
+
 ## Demos
 
 **Grand Piano + MIDI player** — [`media/midi_demo.mp4`](media/midi_demo.mp4)
