@@ -2,7 +2,14 @@
 
 A browser-based synthesizer that generates piano and keyboard sounds from physical models and signal processing — no neural networks, no sample manipulation, just physics equations and math.
 
-**[Open piano.html in your browser to play]**
+**Requires a local server** (browsers block audio file loading from `file://`):
+
+```bash
+npm run piano
+# then open http://localhost:8000/piano.html
+```
+
+Or without npm: `python3 -m http.server 8000` and open the same URL.
 
 ---
 
