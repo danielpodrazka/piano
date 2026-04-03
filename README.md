@@ -92,6 +92,40 @@ Pre-computed data files:
 - `rhodes_tf.npz` — Rhodes FM transfer functions
 - `ddsp_piano_model.pt` — trained DDSP model weights
 
+### Development workflow
+
+The grand piano has a 3×64 phase table (192 values) that controls the initial phase of each
+partial group. Phases matter perceptually — they affect the attack transient shape and how
+partials constructively/destructively interfere. The optimizer finds the phase table that
+minimizes mel-scale STFT loss against C2, C4, and C8 reference tones.
+
+The typical iteration loop when tuning the grand piano model:
+
+```
+1. Edit a parameter in generate_grand_piano.py
+   (rolloff exponent, hammer mass, damping coefficient, IR wet mix, etc.)
+
+2. Regenerate all 52 notes × 8 velocity layers:
+   cd generators && python generate_grand_piano.py
+
+3. Open piano.html, listen, compare against Salamander (ref)
+
+4. If keeping the change, re-optimize phases for the new parameters:
+   python optimize_phases.py
+   # Runs gradient descent (~few minutes), prints updated phase table at the end
+   # Manually paste the printed table back into generate_grand_piano.py
+
+5. Regenerate again with optimized phases, go to step 3
+```
+
+The phase optimizer only tunes phases — all other parameters must be set by ear and physical
+reasoning first. Running the optimizer before the parameters sound right will just find the
+best phases for a bad model.
+
+`optimize_grand_piano.py` uses Differential Evolution to search the full parameter space, but
+in practice the physics-based hand-tuned parameters outperformed what DE found — STFT loss
+doesn't correlate well with perceptual piano quality at this scale.
+
 ### Regenerating samples
 
 ```bash
@@ -99,6 +133,9 @@ cd generators
 
 # Grand piano (outputs to ../audio/grand-piano/)
 python generate_grand_piano.py
+
+# Re-optimize phases after changing grand piano parameters (optional)
+python optimize_phases.py  # paste printed table into generate_grand_piano.py, then regenerate
 
 # Rhodes FM (outputs to ../audio/rhodes-fm/)
 python generate_rhodes_fm.py
