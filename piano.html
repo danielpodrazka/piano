@@ -611,6 +611,13 @@ body.mirror #press-dot-canvas { transform: scaleX(-1); }
 
 <canvas id="key-guide-canvas" width="640" height="48"></canvas>
 
+<div id="loading-bar-wrap" style="height:18px;margin-bottom:6px;display:flex;align-items:center;gap:8px;font-size:0.78rem;color:#888;">
+  <div id="loading-bar-bg" style="flex:1;height:6px;background:#e8e8e8;border-radius:3px;overflow:hidden;">
+    <div id="loading-bar-fill" style="height:100%;width:0%;background:#6a9fd8;border-radius:3px;transition:width 0.3s ease;"></div>
+  </div>
+  <span id="loading-bar-label">Loading Grand Piano…</span>
+</div>
+
 <div id="piano-container">
   <canvas id="piano-canvas" width="640" height="130"></canvas>
   <canvas id="press-dot-canvas" width="640" height="64"></canvas>
@@ -1343,16 +1350,40 @@ async function loadInstrument(name) {
     (nLayers > 0 ? `, ${nLayers} velocity layers` : ''));
 }
 
+const LOAD_ORDER = ['grand_piano', 'salamander', 'rhodes', 'rhodes_fm', 'prism', 'ddsp_piano'];
+const LOAD_LABELS = { grand_piano: 'Grand Piano', salamander: 'Salamander', rhodes: 'Rhodes (ref)', rhodes_fm: 'Rhodes', prism: 'Prism', ddsp_piano: 'DDSP Piano' };
+
+function updateLoadingBar(loaded, total, label) {
+  const fill = document.getElementById('loading-bar-fill');
+  const lbl = document.getElementById('loading-bar-label');
+  const wrap = document.getElementById('loading-bar-wrap');
+  if (!fill) return;
+  const pct = Math.round((loaded / total) * 100);
+  fill.style.width = pct + '%';
+  if (lbl) lbl.textContent = loaded >= total ? 'Ready' : ('Loading ' + label + '…');
+  if (loaded >= total && wrap) setTimeout(() => { wrap.style.opacity = '0'; wrap.style.transition = 'opacity 0.6s'; setTimeout(() => { wrap.style.display = 'none'; }, 600); }, 800);
+}
+
 async function loadSamples() {
   if (samplesLoading) return;
   samplesLoading = true;
+  const all = LOAD_ORDER;
+  const total = all.length;
+  let loaded = 0;
+  updateLoadingBar(0, total, LOAD_LABELS[state.instrument] || 'samples');
   // Load the active instrument first so keyboard and MIDI work immediately
   await loadInstrument(state.instrument);
+  loaded++;
   samplesReady = true;
+  updateLoadingBar(loaded, total, '');
   // Load remaining instruments in background
-  const rest = ['grand_piano', 'salamander', 'rhodes', 'rhodes_fm', 'prism', 'ddsp_piano']
-    .filter(n => n !== state.instrument);
-  await Promise.all(rest.map(n => loadInstrument(n)));
+  const rest = all.filter(n => n !== state.instrument);
+  await Promise.all(rest.map(async n => {
+    await loadInstrument(n);
+    loaded++;
+    const next = rest.find(r => !INSTRUMENTS[r]?.loaded);
+    updateLoadingBar(loaded, total, next ? LOAD_LABELS[next] : '');
+  }));
   samplesLoading = false;
 }
 

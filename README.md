@@ -263,8 +263,40 @@ Or in plain text:
 
 ## Physical Model References
 
-- Bensa, Bilbao, Kronland-Martinet & Smith (2003). *The simulation of piano string vibration: From physical models to finite difference schemes and digital waveguides*. JASA 114(2).
-- Chaigne & Askenfelt (1994). *Numerical simulations of struck strings*. JASA 95(2).
-- Weinreich (1977). *Coupled piano strings*. JASA 62(6).
-- Bank & Sujbert (2005). *Generation of longitudinal vibrations in piano strings*. JASA 117(4).
+### String vibration and inharmonicity
+- Fletcher (1964). *Normal vibration frequencies of a stiff piano string*. JASA 36(1). *(Origin of the inharmonicity formula `f_n = n·f₀·√(1 + B·n²)`)*
+- Bensa, Bilbao, Kronland-Martinet & Smith (2003). *The simulation of piano string vibration: From physical models to finite difference schemes and digital waveguides*. JASA 114(2). *(Stiffness coefficients and damping model)*
+- Chaigne & Askenfelt (1994). *Numerical simulations of struck strings. I. A physical model for a struck string using finite difference methods*. JASA 95(2). *(Hammer-string interaction)*
+
+### Hammer model
 - Stulov (1995). *Hysteretic model of the grand piano hammer felt*. JASA 97(4).
+- Askenfelt & Jansson (1991). *From touch to string vibrations. II: The motion of the key and hammer*. JASA 90(5). *(Hammer velocity and contact duration)*
+- Russell & Rossing (1998). *Testing the nonlinearity of piano hammers using residual shock spectra*. Acta Acustica 84(5). *(Hammer exponent p: bass ~2.0, treble ~3.5)*
+
+### String coupling and decay
+- Weinreich (1977). *Coupled piano strings*. JASA 62(6). *(Two-stage decay: prompt + aftersound)*
+- Conklin (1996). *Design and tone in the mechanoacoustic piano. Part III: Piano strings and scale design*. JASA 100(3). *(Multiple strings per note, detuning, and beating)*
+- Bank, Keränen & Karjalainen (2010). *An computationally efficient piano model*. DAFx 2010. *(Partial-dependent soundboard coupling; phantom decay = sum of parent rates)*
+- Miranda Valiente (2024). *Perceptual evaluation of physics-based piano synthesis*. *(Soundboard coupling moderating prompt/aftersound ratio)*
+
+### String damping
+- Desvages & Bilbao (2016). *Two-polarisation physical model of bowed strings*. DAFx 2016. *(Three-term damping model splitting b₁ into support coupling + air viscosity)*
+- Issanchou, Bilbao, Le Carrou, Touzé & Doaré (2017). *A modal-based approach to the nonlinear vibration of strings against a unilateral obstacle*. JSV 393. *(Air drag ∝ 1/√f creating mid-frequency dip in decay rates)*
+
+### Phantom partials (longitudinal modes)
+- Bank & Sujbert (2005). *Generation of longitudinal vibrations in piano strings: From physics to sound synthesis*. JASA 117(4).
+- Conklin (1999). *Generation of partials due to nonlinear mixing in a stringed instrument*. JASA 105(1).
+
+### Soundboard and body acoustics
+- Conklin (1996). *Design and tone in the mechanoacoustic piano. Part II: Piano sound and acoustics*. JASA 99(6).
+- Skudrzyk (1980). *The mean-value method of predicting the dynamic response of complex vibrators*. JASA 67(4). *(Foundation for soundboard modal density and IR extraction)*
+- Smith & Van Duyne (1995). *Commuted piano synthesis*. ICMC 1995. *(Soundboard spectral envelope and bridge resonance modeling)*
+- Boutillon & Ege (2013). *Vibroacoustics of the piano soundboard*. JSV 332(18). *(Soundboard modal density and radiation)*
+- Giordano (1998). *Sound production by a vibrating piano soundboard*. JASA 104(3). *(Bridge hill resonance ~1-4 kHz)*
+
+### FM synthesis (Rhodes model)
+- Chowning (1973). *The synthesis of complex audio spectra by means of frequency modulation*. Journal of the Audio Engineering Society 21(7). *(FM synthesis foundation)*
+- Välimäki, Pakarinen, Erkut & Karjalainen (2006). *Discrete-time modelling of musical instruments*. Reports on Progress in Physics 69(1). *(Physical modelling survey including tine/tonebar models)*
+
+### DDSP
+- Engel, Hantrakul, Mann & Roberts (2020). *DDSP: Differentiable Digital Signal Processing*. ICLR 2020.
