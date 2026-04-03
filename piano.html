@@ -430,8 +430,8 @@ body.mirror #press-dot-canvas { transform: scaleX(-1); }
 
 <div class="controls">
   <div class="mode-tabs">
-    <button class="tab" data-mode="play">Play</button>
-    <button class="tab active" data-mode="read">Read</button>
+    <button class="tab active" data-mode="play">Play</button>
+    <button class="tab" data-mode="read">Read</button>
     <button class="tab" data-mode="listen">Listen</button>
     <button class="tab" data-mode="find">Find</button>
   </div>
@@ -1620,7 +1620,7 @@ function makeNoteStats() {
 }
 
 let state = {
-  currentMode: 'read',
+  currentMode: 'play',
   currentClef: 'treble',
   instrument: 'grand_piano',
   midiSong: '',

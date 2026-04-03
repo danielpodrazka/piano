@@ -1,6 +1,6 @@
 {
   "private": true,
   "scripts": {
-    "piano": "python3 -m http.server 8000 --bind 127.0.0.1"
+    "piano": "echo 'Open http://127.0.0.1:8000/piano.html' && python3 -m http.server 8000 --bind 127.0.0.1"
   }
 }
