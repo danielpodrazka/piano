@@ -39,7 +39,16 @@ in-browser **reference instrument** for A/B comparison against the physics-based
 - **Music made with the samples:** CC0 (no restrictions on your creative works)
 - **Control files & example clips:** CC0
 
-**Processing:** 12 FLAC samples (velocity layer 2) downloaded, converted to MP3 with ffmpeg (trimmed to 4 seconds with fade-out). Intermediate notes are pitch-shifted at runtime via the Web Audio API.
+**`audio/rhodes/`** — 12 samples (velocity layer 2), converted from FLAC to MP3 with ffmpeg
+(trimmed to 4 seconds with fade-out). These serve two roles:
+
+1. **IR bed** — used in `generators/extract_rhodes_tf.py` to extract per-note transfer
+   functions via spectral division (same approach as the grand piano soundboard IR). The
+   resulting `generators/rhodes_tf.npz` captures the pickup, amp, and cabinet character
+   across the keyboard, which `generators/generate_rhodes_fm.py` then convolves into the
+   FM synthesis.
+2. **In-browser reference** — included as the "Rhodes (ref)" instrument for A/B comparison
+   against the FM synthesis.
 
 ---
 
