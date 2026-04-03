@@ -186,6 +186,27 @@ The CC BY-NC 4.0 license on the jRhodes3d reference samples (`audio/rhodes/`) re
 
 ---
 
+## Citing This Project
+
+If you use this code or audio in a research paper, please cite:
+
+```bibtex
+@software{podrazka2026piano,
+  author    = {Podrazka, Daniel},
+  title     = {Physics-Based Piano Synthesis},
+  year      = {2026},
+  url       = {https://github.com/danielpodrazka/piano},
+  note      = {Physics-based modal synthesis piano with soundboard IR convolution,
+               FM Rhodes, and DDSP comparison}
+}
+```
+
+Or in plain text:
+
+> D. Podrazka, "Physics-Based Piano Synthesis," 2026. [Online]. Available: https://github.com/danielpodrazka/piano
+
+---
+
 ## Physical Model References
 
 - Bensa, Bilbao, Kronland-Martinet & Smith (2003). *The simulation of piano string vibration: From physical models to finite difference schemes and digital waveguides*. JASA 114(2).
